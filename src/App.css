@@ -1,0 +1,98 @@
+.app {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--bg-color);
+  position: relative;
+}
+
+/* Notification Toast */
+.notification-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--sidebar-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 16px 20px;
+  z-index: 1000;
+  animation: toastSlide 0.3s ease-out;
+  border-left: 4px solid var(--primary-color);
+  max-width: 320px;
+}
+
+@keyframes toastSlide {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toast-content strong {
+  display: block;
+  font-size: 14px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.toast-content p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Slide animations for sidebar elements */
+.sidebar .contact-item {
+  transition: background 0.2s, transform 0.2s;
+}
+
+.sidebar .contact-item:hover {
+  transform: translateX(4px);
+}
+
+/* Pulse animation for unread badge */
+.unread-badge {
+  animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Hover effects for user profile */
+.sidebar-footer .user-profile:hover .avatar {
+  transform: scale(1.1);
+}
+
+.sidebar-footer .user-profile .avatar {
+  transition: transform 0.2s;
+}
+
+/* New chat button animation */
+.new-chat-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.new-chat-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 0.3s;
+}
+
+.new-chat-btn:active::after {
+  transform: scale(1.5);
+}
