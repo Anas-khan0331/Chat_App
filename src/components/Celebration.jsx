@@ -7,23 +7,25 @@ gsap.registerPlugin(ScrollTrigger)
 
 const BALLOONS = [
   { left: '6%', color: '#D4AF37', scale: 1, delay: 0, duration: 11 },
-  { left: '14%', color: '#F7E7CE', scale: 0.78, delay: 0.35, duration: 13 },
+  { left: '14%', color: '#F7E7CE', scale: 0.78, delay: 0.35, duration: 13, hideMobile: true },
   { left: '22%', color: '#C9A227', scale: 0.9, delay: 0.7, duration: 10 },
-  { left: '31%', color: '#8B2942', scale: 0.7, delay: 0.2, duration: 14 },
-  { left: '68%', color: '#F8F9FA', scale: 0.82, delay: 0.5, duration: 12 },
+  { left: '31%', color: '#8B2942', scale: 0.7, delay: 0.2, duration: 14, hideMobile: true },
+  { left: '68%', color: '#F8F9FA', scale: 0.82, delay: 0.5, duration: 12, hideMobile: true },
   { left: '76%', color: '#D4AF37', scale: 0.95, delay: 0.15, duration: 11.5 },
-  { left: '84%', color: '#E8C872', scale: 0.72, delay: 0.85, duration: 13.5 },
+  { left: '84%', color: '#E8C872', scale: 0.72, delay: 0.85, duration: 13.5, hideMobile: true },
   { left: '91%', color: '#F7E7CE', scale: 0.88, delay: 0.4, duration: 10.5 },
-  { left: '40%', color: '#D4AF37', scale: 0.6, delay: 1.1, duration: 15 },
-  { left: '58%', color: '#8B2942', scale: 0.65, delay: 0.95, duration: 12.8 },
+  { left: '40%', color: '#D4AF37', scale: 0.6, delay: 1.1, duration: 15, hideMobile: true },
+  { left: '58%', color: '#8B2942', scale: 0.65, delay: 0.95, duration: 12.8, hideMobile: true },
 ]
 
-function Balloon({ color, style, id }) {
+function Balloon({ color, style, id, hideMobile }) {
   const gid = `balloon-grad-${id}`
   return (
     <svg
       viewBox="0 0 70 130"
-      className="balloon pointer-events-none absolute bottom-0 z-[15] w-[52px] sm:w-[64px] origin-bottom"
+      className={`balloon pointer-events-none absolute bottom-0 z-[15] w-10 sm:w-[64px] origin-bottom ${
+        hideMobile ? 'hidden sm:block' : ''
+      }`}
       style={style}
       aria-hidden="true"
     >
@@ -55,7 +57,7 @@ function Popper({ side }) {
   const flip = side === 'right'
   return (
     <svg
-      className={`popper-${side} pointer-events-none absolute bottom-[28%] z-[25] w-16 sm:w-20 ${
+      className={`popper-${side} pointer-events-none absolute bottom-[28%] z-[25] hidden sm:block w-16 sm:w-20 ${
         flip ? 'right-[4%] -scale-x-100' : 'left-[4%]'
       }`}
       viewBox="0 0 80 80"
@@ -241,7 +243,7 @@ export default function Celebration() {
     <section
       id="celebrate"
       ref={sectionRef}
-      className="relative min-h-[90vh] overflow-hidden bg-ink py-28"
+      className="relative min-h-[70vh] sm:min-h-[90vh] overflow-hidden bg-ink py-16 sm:py-28"
     >
       <img
         src="/images/gold-florals.jpg"
@@ -270,9 +272,9 @@ export default function Celebration() {
       <Popper side="left" />
       <Popper side="right" />
 
-      <div className="relative z-30 mx-auto flex max-w-3xl flex-col items-center px-6 text-center">
+      <div className="relative z-30 mx-auto flex max-w-3xl flex-col items-center px-5 sm:px-6 text-center">
         <SectionEyebrow className="cele-reveal">A Joyous Occasion</SectionEyebrow>
-        <h2 className="cele-reveal mt-4 font-cinzel text-3xl sm:text-5xl gold-text">
+        <h2 className="cele-reveal mt-4 font-cinzel text-2xl sm:text-5xl gold-text">
           Let the celebrations begin
         </h2>
         <GoldDivider className="cele-reveal my-6" />

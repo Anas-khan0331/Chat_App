@@ -8,7 +8,7 @@ import Footer from './components/Footer.jsx'
 
 export default function App() {
   return (
-    <div className="bg-ink text-ivory">
+    <div className="bg-ink text-ivory overflow-x-hidden max-w-[100vw]">
       <ProgressBar />
       <CurtainHero />
       <Celebration />

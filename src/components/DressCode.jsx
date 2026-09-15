@@ -46,11 +46,11 @@ export default function DressCode() {
     <section
       id="attire"
       ref={rootRef}
-      className="relative overflow-hidden bg-ink py-24 sm:py-32"
+      className="relative overflow-hidden bg-ink py-16 sm:py-24 md:py-32"
     >
       <OrnamentWatermark className="absolute left-1/2 top-[12%] w-[min(420px,80vw)] -translate-x-1/2 opacity-[0.18]" />
 
-      <div className="relative mx-auto max-w-5xl px-6">
+      <div className="relative mx-auto max-w-5xl px-4 sm:px-6">
         <div className="flex flex-col items-center text-center">
           <SectionEyebrow className="dress-reveal">Dress Code</SectionEyebrow>
           <h2 className="dress-reveal mt-4 font-cinzel text-3xl sm:text-5xl gold-text">
@@ -62,11 +62,11 @@ export default function DressCode() {
           <GoldDivider className="dress-reveal my-8" />
         </div>
 
-        <ul className="dress-reveal mb-14 flex flex-wrap items-end justify-center gap-8 sm:gap-12">
+        <ul className="dress-reveal mb-10 sm:mb-14 flex flex-wrap items-end justify-center gap-5 sm:gap-12">
           {SWATCHES.map((s) => (
             <li key={s.name} className="flex flex-col items-center gap-3">
               <span
-                className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border border-gold/50 shadow-[0_0_0_4px_rgba(13,13,13,0.9),0_0_0_5px_rgba(212,175,55,0.35)]"
+                className="h-10 w-10 sm:h-14 sm:w-14 rounded-full border border-gold/50 shadow-[0_0_0_4px_rgba(13,13,13,0.9),0_0_0_5px_rgba(212,175,55,0.35)]"
                 style={{ background: s.color }}
               />
               <span className="font-cinzel text-[10px] tracking-[0.32em] uppercase text-gold/90">
@@ -82,16 +82,16 @@ export default function DressCode() {
             <img
               src="/images/white-attire.jpg"
               alt="Ivory sherwani, gold jewelry and champagne florals"
-              className="h-[42vh] min-h-[260px] w-full object-cover sm:h-[52vh]"
+              className="h-56 sm:h-[52vh] min-h-[200px] w-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
           </div>
-          <figcaption className="relative pt-4 pb-1 text-center font-cinzel text-[10px] tracking-[0.38em] uppercase text-gold">
+          <figcaption className="relative pt-4 pb-1 text-center font-cinzel text-[9px] sm:text-[10px] tracking-[0.2em] sm:tracking-[0.38em] uppercase text-gold">
             Ivory · Champagne · Gold
           </figcaption>
         </figure>
 
-        <div className="dress-reveal mx-auto mt-16 grid max-w-3xl gap-12 sm:grid-cols-[1fr_auto_1fr] sm:gap-0">
+        <div className="dress-reveal mx-auto mt-10 sm:mt-16 grid max-w-3xl gap-10 sm:grid-cols-[1fr_auto_1fr] sm:gap-0">
           <div className="text-center sm:px-8">
             <p className="font-cinzel text-[10px] tracking-[0.4em] uppercase text-gold">
               For Her

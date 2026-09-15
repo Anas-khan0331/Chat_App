@@ -3,7 +3,7 @@ import { GoldDivider } from './Ornaments'
 
 export default function Footer() {
   return (
-    <footer className="relative bg-ink py-16 text-center overflow-hidden">
+    <footer className="relative bg-ink py-12 sm:py-16 text-center overflow-hidden px-4">
       <div className="absolute inset-x-0 top-0 h-px gold-hairline opacity-70" />
       <div className="mx-auto max-w-xl px-6">
         <p className="font-amiri text-lg text-gold/80 italic mb-4">إن شاء الله</p>

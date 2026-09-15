@@ -34,7 +34,7 @@ export function CrescentMark({ className = 'w-8 h-8' }) {
 
 export function SectionEyebrow({ children, className = '' }) {
   return (
-    <p className={`font-cinzel text-[11px] tracking-[0.42em] uppercase text-gold ${className}`}>
+    <p className={`font-cinzel text-[10px] sm:text-[11px] tracking-[0.22em] sm:tracking-[0.42em] uppercase text-gold ${className}`}>
       {children}
     </p>
   )
@@ -59,7 +59,7 @@ export function GhostGoldButton({ href, children, className = '', ...props }) {
   return (
     <Comp
       href={href}
-      className={`inline-flex items-center justify-center px-7 py-3 font-cinzel text-[11px] tracking-[0.28em] uppercase text-gold border border-gold/70 hover:bg-gold hover:text-ink transition-colors duration-300 ${className}`}
+      className={`inline-flex items-center justify-center px-7 py-3 font-cinzel text-[11px] tracking-[0.28em] uppercase text-gold border border-gold/70 hover:bg-gold hover:text-ink transition-colors duration-300 text-center ${className}`}
       {...props}
     >
       {children}
