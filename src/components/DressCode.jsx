@@ -1,27 +1,27 @@
 import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { GoldDivider, SectionEyebrow } from './Ornaments'
+import { GoldDivider, OrnamentWatermark, SectionEyebrow } from './Ornaments'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CARDS = [
-  {
-    kicker: 'The Palette',
-    title: 'White Theme',
-    copy: 'Ivory, champagne, soft white and muted gold. Think moonlight on marble — luminous, never loud.',
-  },
-  {
-    kicker: 'For Her',
-    title: 'Royal elegance',
-    copy: 'Ivory or white ensembles with gold embroidery, pearls, and refined jewelry. Flowing silhouettes, gracious ease.',
-  },
-  {
-    kicker: 'For Him',
-    title: 'Ivory & gold',
-    copy: 'A white or ivory sherwani, or a tailored ivory suit, finished with champagne or gold accents.',
-  },
+const SWATCHES = [
+  { name: 'Ivory', color: '#F4EFE4' },
+  { name: 'Pearl', color: '#F8F9FA' },
+  { name: 'Champagne', color: '#F7E7CE' },
+  { name: 'Gold', color: '#D4AF37' },
 ]
+
+function GoldCorners() {
+  return (
+    <>
+      <span className="absolute top-3 left-3 h-8 w-8 border-t border-l border-gold/80" />
+      <span className="absolute top-3 right-3 h-8 w-8 border-t border-r border-gold/80" />
+      <span className="absolute bottom-3 left-3 h-8 w-8 border-b border-l border-gold/80" />
+      <span className="absolute bottom-3 right-3 h-8 w-8 border-b border-r border-gold/80" />
+    </>
+  )
+}
 
 export default function DressCode() {
   const rootRef = useRef(null)
@@ -29,108 +29,98 @@ export default function DressCode() {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    let cleanups = []
     const ctx = gsap.context(() => {
       gsap.from('.dress-reveal', {
-        y: 40,
+        y: 36,
         opacity: 0,
         duration: 1,
-        stagger: 0.1,
+        stagger: 0.08,
         ease: 'power2.out',
         scrollTrigger: { trigger: root, start: 'top 75%' },
       })
-
-      const cards = gsap.utils.toArray('.attire-card')
-      cleanups = cards.map((card) => {
-        const shine = card.querySelector('.card-shine')
-        const enter = () => {
-          gsap.to(card, {
-            y: -8,
-            boxShadow: '0 24px 60px rgba(212,175,55,0.16)',
-            duration: 0.4,
-            ease: 'power2.out',
-          })
-          gsap.fromTo(
-            shine,
-            { x: '-120%' },
-            { x: '120%', duration: 0.8, ease: 'power2.inOut' }
-          )
-        }
-        const leave = () => {
-          gsap.to(card, {
-            y: 0,
-            boxShadow: '0 0 0 rgba(0,0,0,0)',
-            duration: 0.4,
-            ease: 'power2.out',
-          })
-        }
-        card.addEventListener('mouseenter', enter)
-        card.addEventListener('mouseleave', leave)
-        return () => {
-          card.removeEventListener('mouseenter', enter)
-          card.removeEventListener('mouseleave', leave)
-        }
-      })
     }, root)
-    return () => {
-      cleanups.forEach((fn) => fn())
-      ctx.revert()
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
     <section
       id="attire"
       ref={rootRef}
-      className="relative bg-charcoal py-24 sm:py-32"
+      className="relative overflow-hidden bg-ink py-24 sm:py-32"
     >
-      <div className="mx-auto max-w-6xl px-6">
+      <OrnamentWatermark className="absolute left-1/2 top-[12%] w-[min(420px,80vw)] -translate-x-1/2 opacity-[0.18]" />
+
+      <div className="relative mx-auto max-w-5xl px-6">
         <div className="flex flex-col items-center text-center">
           <SectionEyebrow className="dress-reveal">Dress Code</SectionEyebrow>
           <h2 className="dress-reveal mt-4 font-cinzel text-3xl sm:text-5xl gold-text">
-            White Theme &amp; Royal Elegant Attire
+            White Theme
           </h2>
-          <GoldDivider className="dress-reveal my-6" />
-          <p className="dress-reveal max-w-2xl font-cormorant text-lg text-ivory/75">
-            Kindly honour the sacred hour in whites and golds. Please refrain
-            from bright colours so the gathering remains a single, serene
-            tableau.
+          <p className="dress-reveal mt-2 font-cormorant italic text-xl sm:text-2xl text-ivory/80">
+            Royal elegant attire
           </p>
+          <GoldDivider className="dress-reveal my-8" />
         </div>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-2 items-stretch">
-          <div className="dress-reveal relative overflow-hidden min-h-[320px] lg:min-h-full">
+        <ul className="dress-reveal mb-14 flex flex-wrap items-end justify-center gap-8 sm:gap-12">
+          {SWATCHES.map((s) => (
+            <li key={s.name} className="flex flex-col items-center gap-3">
+              <span
+                className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border border-gold/50 shadow-[0_0_0_4px_rgba(13,13,13,0.9),0_0_0_5px_rgba(212,175,55,0.35)]"
+                style={{ background: s.color }}
+              />
+              <span className="font-cinzel text-[10px] tracking-[0.32em] uppercase text-gold/90">
+                {s.name}
+              </span>
+            </li>
+          ))}
+        </ul>
+
+        <figure className="dress-reveal relative mx-auto max-w-3xl border border-gold/35 bg-ink p-3 sm:p-4">
+          <GoldCorners />
+          <div className="relative overflow-hidden">
             <img
               src="/images/white-attire.jpg"
               alt="Ivory sherwani, gold jewelry and champagne florals"
-              className="h-full w-full object-cover"
+              className="h-[42vh] min-h-[260px] w-full object-cover sm:h-[52vh]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" />
-            <p className="absolute bottom-5 left-5 right-5 font-cinzel text-[10px] tracking-[0.32em] uppercase text-gold">
-              Ivory · Champagne · Gold
+          </div>
+          <figcaption className="relative pt-4 pb-1 text-center font-cinzel text-[10px] tracking-[0.38em] uppercase text-gold">
+            Ivory · Champagne · Gold
+          </figcaption>
+        </figure>
+
+        <div className="dress-reveal mx-auto mt-16 grid max-w-3xl gap-12 sm:grid-cols-[1fr_auto_1fr] sm:gap-0">
+          <div className="text-center sm:px-8">
+            <p className="font-cinzel text-[10px] tracking-[0.4em] uppercase text-gold">
+              For Her
+            </p>
+            <h3 className="mt-3 font-cormorant text-3xl text-ivory">Grace in ivory</h3>
+            <p className="mt-4 font-cormorant text-lg leading-relaxed text-ivory/70">
+              White or ivory ensembles, pearls, and gold jewelry. Flowing
+              silhouettes — luminous, never loud.
             </p>
           </div>
 
-          <div className="grid gap-5">
-            {CARDS.map((card) => (
-              <article
-                key={card.title}
-                className="attire-card dress-reveal relative overflow-hidden border border-gold/25 bg-ink/60 p-6 sm:p-7"
-              >
-                <span className="card-shine pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-gold/15 to-transparent" />
-                <p className="font-cinzel text-[10px] tracking-[0.35em] uppercase text-gold">
-                  {card.kicker}
-                </p>
-                <h3 className="mt-2 font-cormorant text-2xl text-ivory">
-                  {card.title}
-                </h3>
-                <p className="mt-3 font-outfit text-sm leading-relaxed text-ivory/70">
-                  {card.copy}
-                </p>
-              </article>
-            ))}
+          <div className="hidden sm:block w-px bg-gradient-to-b from-transparent via-gold/70 to-transparent" />
+
+          <div className="text-center sm:px-8">
+            <p className="font-cinzel text-[10px] tracking-[0.4em] uppercase text-gold">
+              For Him
+            </p>
+            <h3 className="mt-3 font-cormorant text-3xl text-ivory">Ivory &amp; gold</h3>
+            <p className="mt-4 font-cormorant text-lg leading-relaxed text-ivory/70">
+              A white or ivory sherwani, or a tailored ivory suit, finished
+              with champagne or gold accents.
+            </p>
           </div>
         </div>
+
+        <p className="dress-reveal mx-auto mt-14 max-w-xl text-center font-cormorant italic text-ivory/55">
+          Kindly refrain from bright colours, so the gathering remains a
+          single, serene tableau.
+        </p>
       </div>
     </section>
   )

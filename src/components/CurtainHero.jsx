@@ -3,10 +3,30 @@ import gsap from 'gsap'
 import { EVENT } from '../constants'
 import { GoldDivider, SparkleField } from './Ornaments'
 
+const LEFT_CLIP_CLOSED =
+  'polygon(0% 0%, 100% 0%, 100% 14%, 100% 38%, 100% 50%, 100% 62%, 100% 86%, 100% 100%, 0% 100%)'
+const LEFT_CLIP_OPEN =
+  'polygon(0% 0%, 100% 0%, 78% 14%, 46% 38%, 34% 50%, 46% 62%, 78% 86%, 100% 100%, 0% 100%)'
+const RIGHT_CLIP_CLOSED =
+  'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 86%, 0% 62%, 0% 50%, 0% 38%, 0% 14%)'
+const RIGHT_CLIP_OPEN =
+  'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 22% 86%, 54% 62%, 66% 50%, 54% 38%, 22% 14%)'
+
+function Holdback() {
+  return (
+    <div className="relative h-11 w-11">
+      <span className="absolute inset-0 rounded-full bg-gradient-to-br from-gold-light via-gold to-gold-deep shadow-gold" />
+      <span className="absolute inset-[3px] rounded-full border border-ink/40 bg-gradient-to-b from-burgundy to-ink" />
+      <span className="absolute inset-[7px] rounded-full border border-gold/80" />
+    </div>
+  )
+}
+
 export default function CurtainHero() {
   const leftRef = useRef(null)
   const rightRef = useRef(null)
-  const valanceRef = useRef(null)
+  const leftTieRef = useRef(null)
+  const rightTieRef = useRef(null)
   const sealRef = useRef(null)
   const contentRef = useRef(null)
   const bgRef = useRef(null)
@@ -17,12 +37,14 @@ export default function CurtainHero() {
     if (openedRef.current) return
     openedRef.current = true
 
+    const rest = window.innerWidth < 640 ? -72 : -63
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (reduced) {
-      gsap.set(leftRef.current, { xPercent: -100 })
-      gsap.set(rightRef.current, { xPercent: 100 })
-      gsap.set([valanceRef.current, sealRef.current], { autoAlpha: 0 })
+      gsap.set(leftRef.current, { xPercent: rest, clipPath: LEFT_CLIP_OPEN })
+      gsap.set(rightRef.current, { xPercent: -rest, clipPath: RIGHT_CLIP_OPEN })
+      gsap.set(sealRef.current, { autoAlpha: 0 })
+      gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 1 })
       gsap.set('.hero-reveal', { opacity: 1, y: 0 })
       setOpened(true)
       return
@@ -35,23 +57,33 @@ export default function CurtainHero() {
     tl.to(sealRef.current, {
       scale: 0.55,
       opacity: 0,
-      duration: 0.45,
+      duration: 0.4,
       ease: 'power2.in',
     })
       .to(
         leftRef.current,
-        { xPercent: -100, duration: 2.25, ease: 'power3.inOut' },
-        0.12
+        {
+          xPercent: rest,
+          clipPath: LEFT_CLIP_OPEN,
+          duration: 2.3,
+          ease: 'power3.inOut',
+        },
+        0.08
       )
       .to(
         rightRef.current,
-        { xPercent: 100, duration: 2.25, ease: 'power3.inOut' },
-        0.12
+        {
+          xPercent: -rest,
+          clipPath: RIGHT_CLIP_OPEN,
+          duration: 2.3,
+          ease: 'power3.inOut',
+        },
+        0.08
       )
       .to(
-        valanceRef.current,
-        { yPercent: -110, duration: 1.55, ease: 'power3.inOut' },
-        0.28
+        [leftTieRef.current, rightTieRef.current],
+        { autoAlpha: 1, scale: 1, duration: 0.6, ease: 'back.out(1.8)' },
+        1.35
       )
       .fromTo(
         contentRef.current?.querySelectorAll('.hero-reveal') ?? [],
@@ -63,6 +95,10 @@ export default function CurtainHero() {
   }, [])
 
   useEffect(() => {
+    gsap.set(leftRef.current, { clipPath: LEFT_CLIP_CLOSED })
+    gsap.set(rightRef.current, { clipPath: RIGHT_CLIP_CLOSED })
+    gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 0, scale: 0.6 })
+
     let cancelled = false
     const kick = () => {
       if (!cancelled) openCurtains()
@@ -101,7 +137,7 @@ export default function CurtainHero() {
 
       <div
         ref={contentRef}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center"
+        className="relative z-10 flex h-full flex-col items-center justify-center px-[18vw] text-center"
       >
         <p className="hero-reveal font-amiri text-xl sm:text-2xl text-gold-light/90 italic mb-5">
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
@@ -111,13 +147,13 @@ export default function CurtainHero() {
         </p>
         <GoldDivider className="hero-reveal mb-5" />
         <h1 className="hero-reveal font-cinzel font-semibold leading-none">
-          <span className="gold-text block text-5xl sm:text-7xl md:text-8xl">
+          <span className="gold-text block text-4xl sm:text-6xl md:text-8xl">
             {EVENT.groom}
           </span>
           <span className="font-vibes text-4xl sm:text-5xl text-gold-light block my-2">
             &amp;
           </span>
-          <span className="gold-text block text-5xl sm:text-7xl md:text-8xl">
+          <span className="gold-text block text-4xl sm:text-6xl md:text-8xl">
             {EVENT.bride}
           </span>
         </h1>
@@ -132,7 +168,7 @@ export default function CurtainHero() {
           Nikkah Ceremony
         </p>
 
-        <div className="hero-reveal scroll-cue mt-12 flex flex-col items-center gap-2 text-gold/80">
+        <div className="hero-reveal scroll-cue mt-10 flex flex-col items-center gap-2 text-gold/80">
           <span className="font-cinzel text-[9px] tracking-[0.4em] uppercase">
             Scroll
           </span>
@@ -140,10 +176,7 @@ export default function CurtainHero() {
         </div>
       </div>
 
-      <div
-        ref={valanceRef}
-        className="pointer-events-none absolute top-0 left-0 right-0 z-50 h-[8.5vh] min-h-[56px] overflow-hidden"
-      >
+      <div className="pointer-events-none absolute top-0 left-0 right-0 z-50 h-[8.5vh] min-h-[56px] overflow-hidden">
         <div
           className="absolute inset-0"
           style={{
@@ -166,7 +199,11 @@ export default function CurtainHero() {
 
       <div
         ref={leftRef}
-        className="pointer-events-none absolute inset-y-0 left-0 z-40 w-1/2 overflow-hidden will-change-transform"
+        className="pointer-events-none absolute inset-y-0 left-0 z-40 w-1/2 will-change-transform"
+        style={{
+          clipPath: LEFT_CLIP_CLOSED,
+          filter: 'drop-shadow(12px 0 22px rgba(0,0,0,0.55))',
+        }}
       >
         <div
           className="absolute inset-0 origin-left"
@@ -178,13 +215,21 @@ export default function CurtainHero() {
           }}
         />
         <div className="absolute inset-0 curtain-folds" />
-        <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black/40 to-transparent" />
-        <div className="absolute top-0 right-0 bottom-0 w-[3px] bg-gradient-to-b from-gold-light via-gold to-gold-deep" />
+        <div
+          ref={leftTieRef}
+          className="absolute right-[10%] top-1/2 z-10 -translate-y-1/2"
+        >
+          <Holdback />
+        </div>
       </div>
 
       <div
         ref={rightRef}
-        className="pointer-events-none absolute inset-y-0 right-0 z-40 w-1/2 overflow-hidden will-change-transform"
+        className="pointer-events-none absolute inset-y-0 right-0 z-40 w-1/2 will-change-transform"
+        style={{
+          clipPath: RIGHT_CLIP_CLOSED,
+          filter: 'drop-shadow(-12px 0 22px rgba(0,0,0,0.55))',
+        }}
       >
         <div
           className="absolute inset-0 scale-110 origin-right"
@@ -195,8 +240,12 @@ export default function CurtainHero() {
           }}
         />
         <div className="absolute inset-0 curtain-folds" />
-        <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-black/40 to-transparent" />
-        <div className="absolute top-0 left-0 bottom-0 w-[3px] bg-gradient-to-b from-gold-light via-gold to-gold-deep" />
+        <div
+          ref={rightTieRef}
+          className="absolute left-[10%] top-1/2 z-10 -translate-y-1/2"
+        >
+          <Holdback />
+        </div>
       </div>
 
       <div
@@ -210,8 +259,8 @@ export default function CurtainHero() {
           className="seal-ring absolute inset-[-8px] rounded-full border border-gold/20"
           style={{ animationDelay: '0.6s' }}
         />
-        <span className="font-cinzel text-lg tracking-[0.2em] text-gold">
-          F&amp;A
+        <span className="font-cinzel text-lg tracking-[0.18em] text-gold">
+          A&amp;F
         </span>
       </div>
     </section>
