@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="mx-auto max-w-xl px-6">
         <p className="font-amiri text-lg text-gold/80 italic mb-4">إن شاء الله</p>
         <p className="font-vibes text-4xl text-gold-light">
-          {EVENT.bride} &amp; {EVENT.groom}
+          {EVENT.groom} &amp; {EVENT.bride}
         </p>
         <GoldDivider className="my-5" />
         <p className="font-cormorant text-ivory/65">

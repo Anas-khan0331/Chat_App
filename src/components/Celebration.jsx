@@ -277,8 +277,8 @@ export default function Celebration() {
         </h2>
         <GoldDivider className="cele-reveal my-6" />
         <p className="cele-reveal font-cormorant text-lg sm:text-xl text-ivory/80 leading-relaxed">
-          Two hearts, one prayer, and a lifetime of mercy. Join us as Fatima
-          &amp; Anas begin their journey of love, faith, and togetherness —
+          Two hearts, one prayer, and a lifetime of mercy. Join us as Anas
+          &amp; Fatima begin their journey of love, faith, and togetherness —
           surrounded by the people they hold dearest.
         </p>
       </div>

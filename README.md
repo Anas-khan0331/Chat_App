@@ -1,6 +1,6 @@
-# Fatima & Anas — Nikkah Invitation
+# Anas & Fatima — Nikkah Invitation
 
-A luxury, interactive Nikkah invitation for **Fatima & Anas**, held at **Badshahi Mosque, Lahore** on **Friday, 27 November 2026**.
+A luxury, interactive Nikkah invitation for **Anas & Fatima**, held at **Badshahi Mosque, Lahore** on **Friday, 27 November 2026**.
 
 Built with **React (Vite)**, **Tailwind CSS**, and **GSAP (ScrollTrigger & Timeline)**.
 

@@ -112,13 +112,13 @@ export default function CurtainHero() {
         <GoldDivider className="hero-reveal mb-5" />
         <h1 className="hero-reveal font-cinzel font-semibold leading-none">
           <span className="gold-text block text-5xl sm:text-7xl md:text-8xl">
-            {EVENT.bride}
+            {EVENT.groom}
           </span>
           <span className="font-vibes text-4xl sm:text-5xl text-gold-light block my-2">
             &amp;
           </span>
           <span className="gold-text block text-5xl sm:text-7xl md:text-8xl">
-            {EVENT.groom}
+            {EVENT.bride}
           </span>
         </h1>
         <GoldDivider className="hero-reveal mt-6 mb-5" />

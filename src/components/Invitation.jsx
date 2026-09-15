@@ -66,9 +66,9 @@ export default function Invitation() {
             groom request the honour of your presence at the Nikkah of
           </p>
           <h2 className="invite-reveal mt-8 font-cinzel">
-            <span className="gold-text block text-4xl sm:text-6xl">{EVENT.bride}</span>
-            <span className="font-vibes text-3xl text-gold-light block my-1">&amp;</span>
             <span className="gold-text block text-4xl sm:text-6xl">{EVENT.groom}</span>
+            <span className="font-vibes text-3xl text-gold-light block my-1">&amp;</span>
+            <span className="gold-text block text-4xl sm:text-6xl">{EVENT.bride}</span>
           </h2>
           <p className="invite-reveal mt-8 font-cormorant text-lg text-ivory/80">
             on {EVENT.dateLabel}
