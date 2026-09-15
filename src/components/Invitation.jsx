@@ -35,12 +35,11 @@ export default function Invitation() {
     if (!root) return
     const ctx = gsap.context(() => {
       gsap.from('.invite-reveal', {
-        y: 36,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.1,
+        y: 24,
+        duration: 0.9,
+        stagger: 0.08,
         ease: 'power2.out',
-        scrollTrigger: { trigger: root, start: 'top 75%' },
+        scrollTrigger: { trigger: root, start: 'top 80%' },
       })
     }, root)
     return () => ctx.revert()

@@ -170,12 +170,11 @@ export default function Celebration() {
 
     const ctx = gsap.context(() => {
       gsap.from('.cele-reveal', {
-        y: 36,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.12,
+        y: 24,
+        duration: 0.9,
+        stagger: 0.08,
         ease: 'power2.out',
-        scrollTrigger: { trigger: section, start: 'top 75%' },
+        scrollTrigger: { trigger: section, start: 'top 80%' },
       })
 
       if (reduced) return
