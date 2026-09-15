@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { EVENT } from '../constants'
-import { GhostGoldButton, GoldDivider, SectionEyebrow } from './Ornaments'
+import { GoldDivider, SectionEyebrow } from './Ornaments'
 
 gsap.registerPlugin(ScrollTrigger)
 
