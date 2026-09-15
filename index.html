@@ -2,12 +2,65 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/chat-icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat App</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="You are invited to the Nikkah of Anas & Fatima — Friday, 27 November 2026 at Badshahi Mosque, Lahore."
+    />
+    <meta property="og:title" content="Anas & Fatima — Nikkah Invitation" />
+    <title>Anas &amp; Fatima — Nikkah Invitation</title>
+    <style>
+      html, body, #root {
+        margin: 0;
+        min-height: 100%;
+        background: #0d0d0d;
+        color: #f8f9fa;
+      }
+      body { font-family: Georgia, 'Times New Roman', serif; }
+      .boot {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 32px 20px;
+        box-sizing: border-box;
+      }
+      .boot p {
+        margin: 0;
+        color: #d4af37;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        font-size: 11px;
+      }
+      .boot h1 {
+        margin: 18px 0 12px;
+        color: #d4af37;
+        font-weight: 500;
+        font-size: clamp(2.4rem, 10vw, 5rem);
+        letter-spacing: 0.06em;
+      }
+      .boot span { display: block; font-family: Georgia, serif; font-style: italic; font-size: 1.6rem; color: #f7e7ce; margin: 6px 0; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600;1,700&family=Great+Vibes&family=Outfit:wght@300;400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot">
+        <p>Nikkah Invitation</p>
+        <h1>Anas <span>&amp;</span> Fatima</h1>
+        <p>27 November 2026 · Badshahi Mosque</p>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

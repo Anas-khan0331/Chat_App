@@ -6,9 +6,23 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    allowedHosts: [
-      '5173-ip72nc38z7bg5iz3hvsns.e2b.app',
-      '.e2b.app'
-    ]
-  }
+    strictPort: true,
+    allowedHosts: true,
+    cors: true,
+    hmr: {
+      overlay: false,
+    },
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: true,
+    cors: true,
+    headers: {
+      'Cache-Control': 'no-store',
+    },
+  },
 })

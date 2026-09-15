@@ -1,34 +1,183 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    max-width: 100%;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+    height: auto;
+    max-width: 100%;
+  }
+
+  body {
+    background: #0d0d0d;
+    color: #f8f9fa;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  ::selection {
+    background: #d4af37;
+    color: #0d0d0d;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
 }
 
-:root {
-  --primary-color: #6366f1;
-  --primary-hover: #4f46e5;
-  --bg-color: #f8fafc;
-  --sidebar-bg: #ffffff;
-  --chat-bg: #f1f5f9;
-  --message-sent: #6366f1;
-  --message-received: #ffffff;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --border-color: #e2e8f0;
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+@layer components {
+  .gold-text {
+    background: linear-gradient(180deg, #fff4cc 0%, #d4af37 48%, #8d6f1f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .gold-hairline {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      #d4af37 20%,
+      #f8e7b8 50%,
+      #d4af37 80%,
+      transparent
+    );
+  }
+
+  .invitation-frame {
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    box-shadow:
+      inset 0 0 0 5px rgba(13, 13, 13, 0.4),
+      inset 0 0 0 6px rgba(212, 175, 55, 0.25),
+      0 30px 80px rgba(0, 0, 0, 0.45);
+  }
+
+  @media (min-width: 640px) {
+    .invitation-frame {
+      box-shadow:
+        inset 0 0 0 8px rgba(13, 13, 13, 0.4),
+        inset 0 0 0 9px rgba(212, 175, 55, 0.25),
+        0 30px 80px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .grain {
+    position: relative;
+  }
+
+  .grain::after {
+    content: '';
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    z-index: 2;
+  }
+
+  .curtain-folds {
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.28) 0px,
+      rgba(0, 0, 0, 0.05) 10px,
+      rgba(255, 214, 140, 0.07) 18px,
+      rgba(0, 0, 0, 0.22) 28px,
+      rgba(0, 0, 0, 0.02) 38px
+    );
+  }
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background: var(--bg-color);
+@layer utilities {
+  .writing-vertical {
+    writing-mode: vertical-rl;
+  }
 }
 
-#root {
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-14px) scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.sparkle {
+  animation: floaty 3.6s ease-in-out infinite;
+}
+
+.seal-ring {
+  animation: pulse-ring 2.4s ease-out infinite;
+}
+
+.shine-sweep {
+  animation: shimmer 2.8s ease-in-out infinite;
+}
+
+.scroll-cue {
+  animation: bob 2.2s ease-in-out infinite;
+}
+
+.hero-reveal {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sparkle,
+  .seal-ring,
+  .shine-sweep,
+  .scroll-cue {
+    animation: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
 }
