@@ -47,11 +47,17 @@ export default function Blessing() {
         </h2>
         <GoldDivider className="bless-reveal my-7 sm:my-8" />
 
-        <p className="bless-reveal font-amiri text-xl sm:text-3xl leading-relaxed text-gold-light/90">
-          رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا
-          <br />
-          وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ
-        </p>
+        <div className="bless-reveal space-y-8 sm:space-y-10">
+          <p className="font-amiri text-xl sm:text-3xl leading-loose text-gold-light/90">
+            رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا
+          </p>
+          <p className="font-amiri text-xl sm:text-3xl leading-loose text-gold-light/90">
+            وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ
+          </p>
+          <p className="font-amiri text-xl sm:text-3xl leading-loose text-gold-light/90">
+            وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا
+          </p>
+        </div>
         <p className="bless-reveal mt-6 font-cormorant italic text-base sm:text-xl text-ivory/75 leading-relaxed">
           “Our Lord, grant us from among our spouses and our offspring
           comfort to our eyes, and make us an example for the righteous.”
