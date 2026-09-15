@@ -68,17 +68,6 @@ export default function Venue() {
                 </li>
               ))}
             </ol>
-
-            <div className="mt-10">
-              <GhostGoldButton
-                href={EVENT.mapsDirections}
-                target="_blank"
-                rel="noreferrer"
-                className="w-full sm:w-auto"
-              >
-                Get Directions
-              </GhostGoldButton>
-            </div>
           </div>
 
           <div className="venue-reveal min-w-0">
@@ -93,18 +82,10 @@ export default function Venue() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between px-4 sm:px-5 py-4 border-t border-gold/20">
+              <div className="px-4 sm:px-5 py-4 border-t border-gold/20">
                 <p className="font-cormorant text-ivory/80 text-sm sm:text-base">
                   {EVENT.venue}
                 </p>
-                <a
-                  href={EVENT.mapsDirections}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="font-cinzel text-[10px] tracking-[0.28em] uppercase text-gold hover:text-gold-light"
-                >
-                  Open Maps
-                </a>
               </div>
             </div>
           </div>
