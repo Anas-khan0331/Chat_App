@@ -49,5 +49,6 @@ export default function Header({ visible }) {
           </a>
         ))}
       </nav>
+    </header>
   )
 }
