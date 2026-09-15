@@ -20,6 +20,25 @@ function openWidth() {
   return '15vw'
 }
 
+const LEFT_OPEN = {
+  borderTopRightRadius: '55% 32%',
+  borderBottomRightRadius: '80% 48%',
+}
+const RIGHT_OPEN = {
+  borderTopLeftRadius: '55% 32%',
+  borderBottomLeftRadius: '80% 48%',
+}
+const LEFT_CLOSED = {
+  width: '50%',
+  borderTopRightRadius: 0,
+  borderBottomRightRadius: 0,
+}
+const RIGHT_CLOSED = {
+  width: '50%',
+  borderTopLeftRadius: 0,
+  borderBottomLeftRadius: 0,
+}
+
 export default function CurtainHero() {
   const leftRef = useRef(null)
   const rightRef = useRef(null)
@@ -29,97 +48,120 @@ export default function CurtainHero() {
   const contentRef = useRef(null)
   const bgRef = useRef(null)
   const openedRef = useRef(false)
+  const busyRef = useRef(false)
+  const revealedRef = useRef(false)
+  const kenBurnsRef = useRef(false)
   const [opened, setOpened] = useState(false)
 
   const openCurtains = useCallback(() => {
-    if (openedRef.current) return
-    openedRef.current = true
+    if (busyRef.current || openedRef.current) return
+    busyRef.current = true
 
     const width = openWidth()
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const leftRadius = {
-      borderTopRightRadius: '55% 32%',
-      borderBottomRightRadius: '80% 48%',
-    }
-    const rightRadius = {
-      borderTopLeftRadius: '55% 32%',
-      borderBottomLeftRadius: '80% 48%',
+
+    const finish = () => {
+      openedRef.current = true
+      busyRef.current = false
+      revealedRef.current = true
+      setOpened(true)
     }
 
     if (reduced) {
-      gsap.set(leftRef.current, { width, ...leftRadius })
-      gsap.set(rightRef.current, { width, ...rightRadius })
+      gsap.set(leftRef.current, { width, ...LEFT_OPEN })
+      gsap.set(rightRef.current, { width, ...RIGHT_OPEN })
       gsap.set(sealRef.current, { autoAlpha: 0 })
-      gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 1 })
+      gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 1, scale: 1 })
       gsap.set('.hero-reveal', { opacity: 1, y: 0 })
-      setOpened(true)
+      finish()
       return
     }
 
-    const tl = gsap.timeline({
-      onComplete: () => setOpened(true),
-    })
+    const tl = gsap.timeline({ onComplete: finish })
 
     tl.to(sealRef.current, {
       scale: 0.55,
       opacity: 0,
-      duration: 0.4,
+      duration: 0.35,
       ease: 'power2.in',
     })
-      .to(
-        leftRef.current,
-        {
-          width,
-          ...leftRadius,
-          duration: 2.2,
-          ease: 'power3.inOut',
-        },
-        0.08
-      )
-      .to(
-        rightRef.current,
-        {
-          width,
-          ...rightRadius,
-          duration: 2.2,
-          ease: 'power3.inOut',
-        },
-        0.08
-      )
+      .to(leftRef.current, { width, ...LEFT_OPEN, duration: 1.8, ease: 'power3.inOut' }, 0.06)
+      .to(rightRef.current, { width, ...RIGHT_OPEN, duration: 1.8, ease: 'power3.inOut' }, 0.06)
       .to(
         [leftTieRef.current, rightTieRef.current],
-        { autoAlpha: 1, scale: 1, duration: 0.55, ease: 'back.out(1.8)' },
-        1.25
+        { autoAlpha: 1, scale: 1, duration: 0.45, ease: 'back.out(1.8)' },
+        1.05
       )
-      .fromTo(
+
+    if (!revealedRef.current) {
+      tl.fromTo(
         contentRef.current?.querySelectorAll('.hero-reveal') ?? [],
         { y: 28, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power2.out' },
-        0.95
+        { y: 0, opacity: 1, duration: 0.9, stagger: 0.08, ease: 'power2.out' },
+        0.7
       )
-      .to(bgRef.current, { scale: 1.08, duration: 18, ease: 'none' }, 1.1)
+    }
+
+    if (!kenBurnsRef.current && bgRef.current) {
+      kenBurnsRef.current = true
+      tl.to(bgRef.current, { scale: 1.08, duration: 18, ease: 'none' }, 0.9)
+    }
   }, [])
+
+  const closeCurtains = useCallback(() => {
+    if (busyRef.current || !openedRef.current) return
+    busyRef.current = true
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const finish = () => {
+      openedRef.current = false
+      busyRef.current = false
+      setOpened(false)
+    }
+
+    if (reduced) {
+      gsap.set(leftRef.current, LEFT_CLOSED)
+      gsap.set(rightRef.current, RIGHT_CLOSED)
+      gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 0 })
+      gsap.set(sealRef.current, { autoAlpha: 1, scale: 1 })
+      finish()
+      return
+    }
+
+    gsap.timeline({ onComplete: finish })
+      .to([leftTieRef.current, rightTieRef.current], { autoAlpha: 0, scale: 0.7, duration: 0.25 }, 0)
+      .to(leftRef.current, { ...LEFT_CLOSED, duration: 1.6, ease: 'power3.inOut' }, 0)
+      .to(rightRef.current, { ...RIGHT_CLOSED, duration: 1.6, ease: 'power3.inOut' }, 0)
+      .to(sealRef.current, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.out' }, 1.05)
+  }, [])
+
+  const toggleCurtains = useCallback(() => {
+    if (openedRef.current) closeCurtains()
+    else openCurtains()
+  }, [closeCurtains, openCurtains])
 
   useEffect(() => {
     gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 0, scale: 0.6 })
 
     let cancelled = false
-    const kick = () => {
+    const firstOpen = () => {
       if (!cancelled) openCurtains()
     }
-    const timer = window.setTimeout(kick, 800)
-    window.addEventListener('wheel', kick, { passive: true })
-    window.addEventListener('touchmove', kick, { passive: true })
-    window.addEventListener('scroll', kick, { passive: true })
+    const timer = window.setTimeout(firstOpen, 800)
 
     return () => {
       cancelled = true
       window.clearTimeout(timer)
-      window.removeEventListener('wheel', kick)
-      window.removeEventListener('touchmove', kick)
-      window.removeEventListener('scroll', kick)
     }
   }, [openCurtains])
+
+  const onKey = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      toggleCurtains()
+    }
+  }
 
   return (
     <section
@@ -141,7 +183,7 @@ export default function CurtainHero() {
 
       <div
         ref={contentRef}
-        className="relative z-10 flex h-full flex-col items-center justify-center px-12 sm:px-20 md:px-28 lg:px-36 text-center"
+        className="relative z-10 flex h-full flex-col items-center justify-center px-12 sm:px-20 md:px-28 lg:px-36 text-center pointer-events-none"
       >
         <p className="hero-reveal font-amiri text-lg sm:text-2xl text-gold-light/90 italic mb-4 sm:mb-5">
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
@@ -192,7 +234,12 @@ export default function CurtainHero() {
 
       <div
         ref={leftRef}
-        className="pointer-events-none absolute top-0 bottom-0 left-0 z-40 w-1/2 overflow-hidden"
+        role="button"
+        tabIndex={0}
+        aria-label={opened ? 'Close curtains' : 'Open curtains'}
+        onClick={toggleCurtains}
+        onKeyDown={onKey}
+        className="absolute top-0 bottom-0 left-0 z-40 w-1/2 overflow-hidden cursor-pointer"
         style={{
           filter: 'drop-shadow(10px 0 18px rgba(0,0,0,0.5))',
         }}
@@ -207,10 +254,10 @@ export default function CurtainHero() {
             transformOrigin: 'center center',
           }}
         />
-        <div className="absolute inset-0 curtain-folds" />
+        <div className="absolute inset-0 curtain-folds pointer-events-none" />
         <div
           ref={leftTieRef}
-          className="absolute right-2 sm:right-3 top-[46%] z-10 -translate-y-1/2"
+          className="pointer-events-none absolute right-2 sm:right-3 top-[46%] z-10 -translate-y-1/2"
         >
           <Holdback />
         </div>
@@ -218,7 +265,12 @@ export default function CurtainHero() {
 
       <div
         ref={rightRef}
-        className="pointer-events-none absolute top-0 bottom-0 right-0 z-40 w-1/2 overflow-hidden"
+        role="button"
+        tabIndex={0}
+        aria-label={opened ? 'Close curtains' : 'Open curtains'}
+        onClick={toggleCurtains}
+        onKeyDown={onKey}
+        className="absolute top-0 bottom-0 right-0 z-40 w-1/2 overflow-hidden cursor-pointer"
         style={{
           filter: 'drop-shadow(-10px 0 18px rgba(0,0,0,0.5))',
         }}
@@ -231,30 +283,33 @@ export default function CurtainHero() {
             backgroundPosition: 'center',
           }}
         />
-        <div className="absolute inset-0 curtain-folds" />
+        <div className="absolute inset-0 curtain-folds pointer-events-none" />
         <div
           ref={rightTieRef}
-          className="absolute left-2 sm:left-3 top-[46%] z-10 -translate-y-1/2"
+          className="pointer-events-none absolute left-2 sm:left-3 top-[46%] z-10 -translate-y-1/2"
         >
           <Holdback />
         </div>
       </div>
 
-      <div
+      <button
+        type="button"
         ref={sealRef}
-        className={`pointer-events-none absolute left-1/2 top-1/2 z-50 flex h-20 w-20 sm:h-28 sm:w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-gold/80 bg-gradient-to-b from-burgundy to-ink shadow-gold ${
-          opened ? 'opacity-0' : ''
+        onClick={toggleCurtains}
+        aria-label="Open curtains"
+        className={`absolute left-1/2 top-1/2 z-50 flex h-20 w-20 sm:h-28 sm:w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-gold/80 bg-gradient-to-b from-burgundy to-ink shadow-gold ${
+          opened ? 'opacity-0 pointer-events-none' : 'cursor-pointer'
         }`}
       >
-        <span className="seal-ring absolute inset-0 rounded-full border border-gold/50" />
+        <span className="seal-ring pointer-events-none absolute inset-0 rounded-full border border-gold/50" />
         <span
-          className="seal-ring absolute inset-[-8px] rounded-full border border-gold/20"
+          className="seal-ring pointer-events-none absolute inset-[-8px] rounded-full border border-gold/20"
           style={{ animationDelay: '0.6s' }}
         />
         <span className="font-cinzel text-base sm:text-lg tracking-[0.18em] text-gold">
           A&amp;F
         </span>
-      </div>
+      </button>
     </section>
   )
 }
