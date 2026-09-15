@@ -3,7 +3,7 @@ import gsap from 'gsap'
 import { EVENT } from '../constants'
 import { GoldDivider, SparkleField } from './Ornaments'
 
-export default function CurtainHero({ onOpened }) {
+export default function CurtainHero() {
   const leftRef = useRef(null)
   const rightRef = useRef(null)
   const valanceRef = useRef(null)
@@ -24,18 +24,12 @@ export default function CurtainHero({ onOpened }) {
       gsap.set(rightRef.current, { xPercent: 100 })
       gsap.set([valanceRef.current, sealRef.current], { autoAlpha: 0 })
       gsap.set('.hero-reveal', { opacity: 1, y: 0 })
-      document.body.style.overflow = ''
       setOpened(true)
-      onOpened?.()
       return
     }
 
     const tl = gsap.timeline({
-      onComplete: () => {
-        document.body.style.overflow = ''
-        setOpened(true)
-        onOpened?.()
-      },
+      onComplete: () => setOpened(true),
     })
 
     tl.to(sealRef.current, {
@@ -65,31 +59,25 @@ export default function CurtainHero({ onOpened }) {
         { y: 0, opacity: 1, duration: 1.05, stagger: 0.11, ease: 'power2.out' },
         1.05
       )
-      .to(
-        bgRef.current,
-        { scale: 1.08, duration: 18, ease: 'none' },
-        1.2
-      )
-  }, [onOpened])
+      .to(bgRef.current, { scale: 1.08, duration: 18, ease: 'none' }, 1.2)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
-    document.body.style.overflow = 'hidden'
     const kick = () => {
       if (!cancelled) openCurtains()
     }
-    const timer = window.setTimeout(kick, 2400)
-    window.addEventListener('wheel', kick, { once: true, passive: true })
-    window.addEventListener('touchmove', kick, { once: true, passive: true })
-    window.addEventListener('keydown', kick, { once: true })
+    const timer = window.setTimeout(kick, 900)
+    window.addEventListener('wheel', kick, { passive: true })
+    window.addEventListener('touchmove', kick, { passive: true })
+    window.addEventListener('scroll', kick, { passive: true })
 
     return () => {
       cancelled = true
       window.clearTimeout(timer)
       window.removeEventListener('wheel', kick)
       window.removeEventListener('touchmove', kick)
-      window.removeEventListener('keydown', kick)
-      document.body.style.overflow = ''
+      window.removeEventListener('scroll', kick)
     }
   }, [openCurtains])
 
@@ -144,11 +132,7 @@ export default function CurtainHero({ onOpened }) {
           Nikkah Ceremony
         </p>
 
-        <div
-          className={`hero-reveal scroll-cue mt-12 flex flex-col items-center gap-2 text-gold/80 ${
-            opened ? 'opacity-100' : ''
-          }`}
-        >
+        <div className="hero-reveal scroll-cue mt-12 flex flex-col items-center gap-2 text-gold/80">
           <span className="font-cinzel text-[9px] tracking-[0.4em] uppercase">
             Scroll
           </span>
@@ -156,12 +140,9 @@ export default function CurtainHero({ onOpened }) {
         </div>
       </div>
 
-      {/* Valance */}
       <div
         ref={valanceRef}
-        className={`absolute top-0 left-0 right-0 z-50 h-[8.5vh] min-h-[56px] overflow-hidden ${
-          opened ? 'pointer-events-none' : ''
-        }`}
+        className="pointer-events-none absolute top-0 left-0 right-0 z-50 h-[8.5vh] min-h-[56px] overflow-hidden"
       >
         <div
           className="absolute inset-0"
@@ -183,12 +164,9 @@ export default function CurtainHero({ onOpened }) {
         </div>
       </div>
 
-      {/* Left curtain */}
       <div
         ref={leftRef}
-        className={`absolute inset-y-0 left-0 z-40 w-1/2 overflow-hidden will-change-transform ${
-          opened ? 'pointer-events-none' : ''
-        }`}
+        className="pointer-events-none absolute inset-y-0 left-0 z-40 w-1/2 overflow-hidden will-change-transform"
       >
         <div
           className="absolute inset-0 origin-left"
@@ -204,12 +182,9 @@ export default function CurtainHero({ onOpened }) {
         <div className="absolute top-0 right-0 bottom-0 w-[3px] bg-gradient-to-b from-gold-light via-gold to-gold-deep" />
       </div>
 
-      {/* Right curtain */}
       <div
         ref={rightRef}
-        className={`absolute inset-y-0 right-0 z-40 w-1/2 overflow-hidden will-change-transform ${
-          opened ? 'pointer-events-none' : ''
-        }`}
+        className="pointer-events-none absolute inset-y-0 right-0 z-40 w-1/2 overflow-hidden will-change-transform"
       >
         <div
           className="absolute inset-0 scale-110 origin-right"
@@ -224,25 +199,21 @@ export default function CurtainHero({ onOpened }) {
         <div className="absolute top-0 left-0 bottom-0 w-[3px] bg-gradient-to-b from-gold-light via-gold to-gold-deep" />
       </div>
 
-      {/* Wax seal */}
-      <button
+      <div
         ref={sealRef}
-        type="button"
-        onClick={openCurtains}
-        aria-label="Open the invitation"
-        className={`absolute left-1/2 top-1/2 z-50 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-gold/80 bg-gradient-to-b from-burgundy to-ink shadow-gold ${
-          opened ? 'pointer-events-none' : ''
+        className={`pointer-events-none absolute left-1/2 top-1/2 z-50 flex h-28 w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-gold/80 bg-gradient-to-b from-burgundy to-ink shadow-gold ${
+          opened ? 'opacity-0' : ''
         }`}
       >
-        <span className="seal-ring pointer-events-none absolute inset-0 rounded-full border border-gold/50" />
-        <span className="seal-ring pointer-events-none absolute inset-[-8px] rounded-full border border-gold/20" style={{ animationDelay: '0.6s' }} />
+        <span className="seal-ring absolute inset-0 rounded-full border border-gold/50" />
+        <span
+          className="seal-ring absolute inset-[-8px] rounded-full border border-gold/20"
+          style={{ animationDelay: '0.6s' }}
+        />
         <span className="font-cinzel text-lg tracking-[0.2em] text-gold">
           F&amp;A
         </span>
-        <span className="mt-1 font-cinzel text-[8px] tracking-[0.35em] uppercase text-champagne/80">
-          Open
-        </span>
-      </button>
+      </div>
     </section>
   )
 }

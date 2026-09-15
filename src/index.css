@@ -5,18 +5,22 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    height: auto;
+    overflow-y: scroll;
   }
 
   html,
   body,
   #root {
     min-height: 100%;
+    height: auto;
   }
 
   body {
     background: #0d0d0d;
     color: #f8f9fa;
     overflow-x: hidden;
+    overflow-y: auto;
     font-family: 'Outfit', sans-serif;
   }
 
