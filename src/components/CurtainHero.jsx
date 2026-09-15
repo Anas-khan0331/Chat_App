@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { EVENT } from '../constants'
 import { GoldDivider, SparkleField } from './Ornaments'
@@ -36,42 +36,69 @@ export default function CurtainHero() {
   const leftTieRef = useRef(null)
   const rightTieRef = useRef(null)
   const sealRef = useRef(null)
+  const contentRef = useRef(null)
   const busyRef = useRef(false)
-  const openedRef = useRef(true)
-  const [opened, setOpened] = useState(true)
+  const openedRef = useRef(false)
+  const introDoneRef = useRef(false)
+  const [opened, setOpened] = useState(false)
+  const [canToggle, setCanToggle] = useState(false)
 
-  const openCurtains = useCallback(() => {
+  const openCurtains = useCallback((isIntro = false) => {
     if (busyRef.current || openedRef.current) return
     busyRef.current = true
     const width = openWidth()
 
-    gsap.timeline({
+    const tl = gsap.timeline({
       onComplete: () => {
         openedRef.current = true
         busyRef.current = false
         setOpened(true)
+        introDoneRef.current = true
+        setCanToggle(true)
       },
     })
-      .to(sealRef.current, { opacity: 0, scale: 0.6, duration: 0.3, ease: 'power2.in' })
+
+    tl.to(sealRef.current, {
+      opacity: 0,
+      scale: 0.55,
+      duration: isIntro ? 0.45 : 0.3,
+      ease: 'power2.in',
+    })
       .to(
         leftRef.current,
-        { width, ...LEFT_OPEN_RADIUS, duration: 1.6, ease: 'power3.inOut' },
-        0
+        {
+          width,
+          ...LEFT_OPEN_RADIUS,
+          duration: isIntro ? 2.4 : 1.6,
+          ease: 'power3.inOut',
+        },
+        isIntro ? 0.15 : 0
       )
       .to(
         rightRef.current,
-        { width, ...RIGHT_OPEN_RADIUS, duration: 1.6, ease: 'power3.inOut' },
-        0
+        {
+          width,
+          ...RIGHT_OPEN_RADIUS,
+          duration: isIntro ? 2.4 : 1.6,
+          ease: 'power3.inOut',
+        },
+        isIntro ? 0.15 : 0
       )
       .to(
         [leftTieRef.current, rightTieRef.current],
-        { autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(1.6)' },
-        0.9
+        { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(1.6)' },
+        isIntro ? 1.45 : 0.9
+      )
+      .fromTo(
+        contentRef.current,
+        { opacity: 0.35 },
+        { opacity: 1, duration: 0.9, ease: 'power2.out' },
+        isIntro ? 1.1 : 0.2
       )
   }, [])
 
   const closeCurtains = useCallback(() => {
-    if (busyRef.current || !openedRef.current) return
+    if (!introDoneRef.current || busyRef.current || !openedRef.current) return
     busyRef.current = true
 
     gsap.timeline({
@@ -108,9 +135,29 @@ export default function CurtainHero() {
   }, [])
 
   const toggleCurtains = useCallback(() => {
+    if (!introDoneRef.current || !canToggle || busyRef.current) return
     if (openedRef.current) closeCurtains()
-    else openCurtains()
-  }, [closeCurtains, openCurtains])
+    else openCurtains(false)
+  }, [canToggle, closeCurtains, openCurtains])
+
+  useLayoutEffect(() => {
+    gsap.set(leftRef.current, {
+      width: '50%',
+      borderTopRightRadius: 0,
+      borderBottomRightRadius: 0,
+    })
+    gsap.set(rightRef.current, {
+      width: '50%',
+      borderTopLeftRadius: 0,
+      borderBottomLeftRadius: 0,
+    })
+    gsap.set([leftTieRef.current, rightTieRef.current], { autoAlpha: 0, scale: 0.6 })
+    gsap.set(sealRef.current, { opacity: 1, scale: 1 })
+    gsap.set(contentRef.current, { opacity: 0.35 })
+
+    const delay = window.setTimeout(() => openCurtains(true), 700)
+    return () => window.clearTimeout(delay)
+  }, [openCurtains])
 
   const onKey = (e) => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -132,7 +179,10 @@ export default function CurtainHero() {
 
       <SparkleField />
 
-      <div className="relative z-10 flex h-full min-h-[640px] flex-col items-center justify-center px-12 sm:px-20 md:px-28 lg:px-36 text-center pointer-events-none">
+      <div
+        ref={contentRef}
+        className="relative z-10 flex h-full min-h-[640px] flex-col items-center justify-center px-12 sm:px-20 md:px-28 lg:px-36 text-center pointer-events-none"
+      >
         <p className="font-amiri text-lg sm:text-2xl text-gold-light/90 italic mb-4 sm:mb-5">
           بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
         </p>
@@ -180,15 +230,14 @@ export default function CurtainHero() {
       <div
         ref={leftRef}
         role="button"
-        tabIndex={0}
+        tabIndex={canToggle ? 0 : -1}
         aria-label={opened ? 'Close curtains' : 'Open curtains'}
         onClick={toggleCurtains}
         onKeyDown={onKey}
-        className="absolute top-0 bottom-0 left-0 z-40 w-[52px] sm:w-[12vw] lg:w-[15vw] overflow-hidden cursor-pointer"
-        style={{
-          filter: 'drop-shadow(10px 0 18px rgba(0,0,0,0.5))',
-          ...LEFT_OPEN_RADIUS,
-        }}
+        className={`absolute top-0 bottom-0 left-0 z-40 w-1/2 overflow-hidden ${
+          canToggle ? 'cursor-pointer' : 'cursor-default'
+        }`}
+        style={{ filter: 'drop-shadow(10px 0 18px rgba(0,0,0,0.5))' }}
       >
         <div
           className="absolute inset-0"
@@ -212,15 +261,14 @@ export default function CurtainHero() {
       <div
         ref={rightRef}
         role="button"
-        tabIndex={0}
+        tabIndex={canToggle ? 0 : -1}
         aria-label={opened ? 'Close curtains' : 'Open curtains'}
         onClick={toggleCurtains}
         onKeyDown={onKey}
-        className="absolute top-0 bottom-0 right-0 z-40 w-[52px] sm:w-[12vw] lg:w-[15vw] overflow-hidden cursor-pointer"
-        style={{
-          filter: 'drop-shadow(-10px 0 18px rgba(0,0,0,0.5))',
-          ...RIGHT_OPEN_RADIUS,
-        }}
+        className={`absolute top-0 bottom-0 right-0 z-40 w-1/2 overflow-hidden ${
+          canToggle ? 'cursor-pointer' : 'cursor-default'
+        }`}
+        style={{ filter: 'drop-shadow(-10px 0 18px rgba(0,0,0,0.5))' }}
       >
         <div
           className="absolute inset-0"
@@ -245,7 +293,7 @@ export default function CurtainHero() {
         onClick={toggleCurtains}
         aria-label="Open curtains"
         className={`absolute left-1/2 top-1/2 z-50 flex h-20 w-20 sm:h-28 sm:w-28 -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full border border-gold/80 bg-gradient-to-b from-burgundy to-ink shadow-gold ${
-          opened ? 'opacity-0 pointer-events-none' : 'cursor-pointer'
+          opened || !canToggle ? 'pointer-events-none' : 'cursor-pointer'
         }`}
       >
         <span className="seal-ring pointer-events-none absolute inset-0 rounded-full border border-gold/50" />
